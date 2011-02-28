@@ -1,4 +1,7 @@
 #! /usr/bin/env python
+# Copyright (c) 2010-2011 Magnus Olsson (magnus@minimum.se)
+# See LICENSE for details
+
 """magboot - AVR serial bootloader
   
 usage: magboot <port> <device> <[command1] [command2] ... [commandN]>
