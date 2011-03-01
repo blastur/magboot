@@ -62,6 +62,10 @@ fusedump:
 fuseprog:
 	$(AVRDUDE) -u -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m
 
+.PHONY: flashdump
+flashdump:
+	$(AVRDUDE) -U flash:r:flash.bin:r
+
 .PHONY: clean
 clean:
 	rm -f $(OBJS) $(PROG) $(IHEX)
