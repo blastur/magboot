@@ -70,22 +70,26 @@ static bool cmd_write_page(uint16_t *addr)
 {	
 	uint16_t i;
 	uint16_t page = *addr;
+	uint8_t buf[SPM_PAGESIZE];
 
-    eeprom_busy_wait();
+	eeprom_busy_wait();
 
-    boot_page_erase(page);
-    boot_spm_busy_wait();
+	boot_page_erase(page);
 
-    for (i = 0; i < SPM_PAGESIZE; i += 2) {
-        uint16_t w = uart_getc();
-        w += uart_getc() << 8;
-        boot_page_fill(page + i, w);
-    }
+	for(i = 0; i < SPM_PAGESIZE; i++)
+		buf[i] = uart_getc();
 
-    boot_page_write(page);
-    boot_spm_busy_wait();
+	boot_spm_busy_wait();
+	for (i = 0; i < SPM_PAGESIZE; i += 2) {
+		uint16_t w = buf[i];
+		w += buf[i+1] << 8;
+		boot_page_fill(page + i, w);
+	}
 
-    boot_rww_enable();
+	boot_page_write(page);
+	boot_spm_busy_wait();
+
+	boot_rww_enable();
 
 	/* Auto-increment address */
 	*addr += SPM_PAGESIZE;
