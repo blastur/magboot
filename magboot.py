@@ -11,7 +11,6 @@ commands:
 -w <file>	Write contents of <file> to loaded address (use - for stdin)
 -i		Verify device signature
 -j		Jump to loaded address
--p		Check device presence
 -r		Reset device
 
 supported devices:
@@ -74,10 +73,6 @@ def do_cmd(str, expect_reply = True):
 			print reply
 			reply = ser.read()
 	sys.exit(1)
-
-def cmd_presence():
-	print "PRESENCE"
-	do_cmd('P')
 
 def cmd_device_id():
 	print "ID"
@@ -148,7 +143,6 @@ if __name__ == "__main__":
 		if o == '-w': cmd_write_file(a)
 		if o == '-i': cmd_device_id()
 		if o == '-j': cmd_jump()
-		if o == '-p': cmd_presence()
 		if o == '-r': cmd_reset()
 
 	ser.close()

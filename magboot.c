@@ -112,11 +112,6 @@ static bool cmd_device_id(void)
 	return fail;
 }
 
-static bool cmd_precense()
-{
-	return false;
-}
-
 static bool cmd_jump(uint16_t addr)
 {
 	jump_t func;
@@ -160,11 +155,6 @@ int main(void) {
 
 	while(1) {
 		switch (uart_getc()) {
-			/* Presence */
-			case 'P':
-				fail = cmd_precense();
-				break;
-
 			/* Device ID */
 			case 'I':
 				fail = cmd_device_id();
