@@ -91,7 +91,12 @@ def cmd_load_addr(addr):
 
 def cmd_write_file(fname):
 	print "WRITE_FILE"
-	f = open(fname, "rb")
+
+	if (fname == "-"):
+		f = sys.stdin
+	else:
+		f = open(fname, "rb")
+
 	eof = False
 	
 	while (not eof):
