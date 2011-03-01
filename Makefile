@@ -12,7 +12,7 @@
 # GNU General Public License for more details.
 # 
 # You should have received a copy of the GNU General Public License
-# along with Windnode.  If not, see <http://www.gnu.org/licenses/>.
+# along with magboot.  If not, see <http://www.gnu.org/licenses/>.
 # 
 
 CC=avr-gcc
