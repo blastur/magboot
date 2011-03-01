@@ -1,0 +1,7 @@
+flash.bin
+magboot
+testapp/testapp
+*.o
+*.ihex
+*.bin
+
