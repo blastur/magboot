@@ -138,12 +138,10 @@ int main(void) {
 	cause = MCUSR;
 	MCUSR = 0;		
 
-#if 0
 	if (bit_is_clear(cause, EXTRF)) {
 		/* Bypass magboot if reset caused by watchdog, power-on or brown-out */
 		cmd_jump(JUMP_ADDR);
 	}
-#endif		
 		
 	wdt_enable(WDTO_4S);
 
