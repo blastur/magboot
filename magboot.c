@@ -72,8 +72,6 @@ static bool cmd_write_page(uint16_t *addr)
 	uint16_t page = *addr;
 	uint8_t buf[SPM_PAGESIZE];
 
-	eeprom_busy_wait();
-
 	boot_page_erase(page);
 
 	for(i = 0; i < SPM_PAGESIZE; i++)
