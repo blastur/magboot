@@ -7,11 +7,11 @@
 usage: magboot <port> <device> <[command1] [command2] ... [commandN]>
 
 commands:
--a <addr>	Load (byte) address (defaults to 0x0 on target)
+-a <addr>	Load (byte) address (autoincremented by -w)
 -w <file>	Write contents of <file> to loaded address (use - for stdin)
 -i		Verify device signature
 -j		Jump to loaded address
--r		Reset device
+-r		Reset device (will bypass bootloader on next boot)
 
 supported devices:
 atmega328p
