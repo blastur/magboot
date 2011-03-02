@@ -41,7 +41,6 @@ CFLAGS += -DJUMP_ADDR=0x00
 MCU=atmega328p
 CPU_FREQ=16000000L
 HFUSE=0xdc
-LFUSE=0xff
 BOOTADDR=0x7c00
 
 $(PROG): $(OBJS)
@@ -56,11 +55,11 @@ flash: $(IHEX)
 
 .PHONY: fusedump
 fusedump: 
-	$(AVRDUDE) -U hfuse:r:-:h -U lfuse:r:-:h -U efuse:r:-:h -U lock:r:-:h
+	$(AVRDUDE) -U hfuse:r:-:h
 
 .PHONY: fuseprog
 fuseprog:
-	$(AVRDUDE) -u -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m
+	$(AVRDUDE) -u -U hfuse:w:$(HFUSE):m
 
 .PHONY: flashdump
 flashdump:
