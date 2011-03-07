@@ -134,7 +134,7 @@ if __name__ == "__main__":
 	ser = serial.Serial(port=sys.argv[1], baudrate=115200, timeout=4)
 
 	try:
-		opts, args = getopt.getopt(sys.argv[3:], 'a:w:ijpr')
+		opts, args = getopt.getopt(sys.argv[3:], 'a:w:ijr')
 	except getopt.error, msg:
 		usage(msg)
 
