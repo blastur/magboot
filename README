@@ -41,6 +41,12 @@ with appropriate values. Example:
 
 	make PROGPORT=/dev/ttyUSB0 PROGTYPE=jtagmkII flash
 
+For a list of valid PROGTYPE values, please refer to the Avrdude manual:
+
+	http://www.nongnu.org/avrdude/user-manual/avrdude_4.html
+	
+Scroll down to the -c option for a complete list of supported programmers.
+
 Usage
 ================================================================================
 Magboot ships with a python-script which handles the serial communication with 
