@@ -12,6 +12,7 @@ commands:
 -i		Verify device signature
 -j		Jump to loaded address
 -r		Reset device (will bypass bootloader on next boot)
+-z		Wait for device to appear on <port>
 
 supported devices:
 atmega328p
@@ -121,6 +122,17 @@ def cmd_jump():
 	print "JUMP"
 	do_cmd('J', False)
 
+def cmd_wait():
+	print "WAIT"
+	while True:
+		sys.stdout.flush()
+		ser.write('I' + dev['signature'])
+		data = ser.read()
+		if (len(data) == 1 and data == 'Y'):
+			break
+		sys.stdout.write('.')
+	sys.stdout.write('\n')
+
 if __name__ == "__main__":
 	if len(sys.argv) < 4:
 		usage();
@@ -131,10 +143,10 @@ if __name__ == "__main__":
 		print "Unsupported device '" + sys.argv[2] + "'"
 		sys.exit(3)
 
-	ser = serial.Serial(port=sys.argv[1], baudrate=115200, timeout=4)
+	ser = serial.Serial(port=sys.argv[1], baudrate=115200, timeout=1)
 
 	try:
-		opts, args = getopt.getopt(sys.argv[3:], 'a:w:ijr')
+		opts, args = getopt.getopt(sys.argv[3:], 'a:w:ijrz')
 	except getopt.error, msg:
 		usage(msg)
 
@@ -144,6 +156,7 @@ if __name__ == "__main__":
 		if o == '-i': cmd_device_id()
 		if o == '-j': cmd_jump()
 		if o == '-r': cmd_reset()
+		if o == '-z': cmd_wait()
 
 	ser.close()
 
