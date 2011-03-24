@@ -150,6 +150,9 @@ if __name__ == "__main__":
 	except getopt.error, msg:
 		usage(msg)
 
+	ser.flushInput()
+	ser.flushOutput()
+
 	for o, a in opts:
 		if o == '-a': cmd_load_addr(a)
 		if o == '-w': cmd_write_file(a)
