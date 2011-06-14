@@ -114,6 +114,12 @@ static bool cmd_jump(uint16_t addr)
 {
 	jump_t func;
 
+	/* Clear WDRF to prevent "infinite reset loop". Do not rely on application
+	 * to clear it, since it may not be WDT-aware and cannot account for the WDT
+	 * usage of Magboot. The downside of this is however that an application can
+	 * never detect WDT reset during initialization.
+	 */
+	MCUSR &= ~(_BV(WDRF));
 	wdt_disable();
 	func = (jump_t) addr;
 	func();
@@ -131,17 +137,13 @@ static bool cmd_reset(void)
 
 int main(void) {
 	uint16_t addr = JUMP_ADDR;
-	uint8_t cause;
 	bool fail;
 
-	/* Stash away reset cause */
-	cause = MCUSR;
-	MCUSR = 0;		
-
-	if (bit_is_clear(cause, EXTRF)) {
+	if (bit_is_clear(MCUSR, EXTRF)) {
 		/* Bypass magboot if reset caused by watchdog, power-on or brown-out */
 		cmd_jump(JUMP_ADDR);
-	}
+	} else
+		MCUSR &= ~(_BV(EXTRF));
 		
 	wdt_enable(WDTO_4S);
 
