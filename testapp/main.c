@@ -18,9 +18,9 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define LED_DIR     DDRB
-#define LED_PORT    PORTB
-#define LED_BIT		PB5
+#define LED_DIR  DDRB
+#define LED_PORT PORTB
+#define LED_BIT  PB5
 
 int main(void)
 {

@@ -67,7 +67,7 @@ static bool cmd_load_addr(uint16_t *addr)
 }
 
 static bool cmd_write_page(uint16_t *addr)
-{	
+{
 	uint16_t i;
 	uint16_t page = *addr;
 	uint8_t buf[SPM_PAGESIZE];
@@ -144,7 +144,7 @@ int main(void) {
 		cmd_jump(JUMP_ADDR);
 	} else
 		MCUSR &= ~(_BV(EXTRF));
-		
+
 	wdt_enable(WDTO_4S);
 
 	LED_DIR |= _BV(LED_BIT);
@@ -177,7 +177,7 @@ int main(void) {
 			case 'J':
 				fail = cmd_jump(addr);
 				break;
-			
+
 			default:
 				fail = true;
 				break;
@@ -190,4 +190,3 @@ int main(void) {
 		wdt_reset();
 	}
 }
-
