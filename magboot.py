@@ -143,7 +143,7 @@ if __name__ == "__main__":
 		print "Unsupported device '" + sys.argv[2] + "'"
 		sys.exit(3)
 
-	ser = serial.Serial(port=sys.argv[1], baudrate=115200, timeout=1)
+	ser = serial.Serial(port=sys.argv[1], baudrate=19200, timeout=1)
 
 	try:
 		opts, args = getopt.getopt(sys.argv[3:], 'a:w:ijrz')

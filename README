@@ -12,34 +12,41 @@ Features
 * Basic device identification to prevent flashing unknown or unsupported devices
 * Fits in a 1 kb boot section (binary size is approx. 650 bytes)
 * Supports loading raw binaries only (ihex is NOT supported at the moment)
+* Supports native AVR serialport or software serialport on two arbitrary pins
 
 Installation
 ================================================================================
 To install magboot you need an ISP programmer. 
 
-1) Edit Makefile and the "Target specifics"-section:
+1) Edit Makefile and the "Target definition"-section:
 
-	MCU			Set to either atmega328p or atmega168p depending on target.
+	MCU			Set to either 'atmega328p' or 'atmega168p' depending on target.
 
-	CPU_FREQ	Match your clock settings (LFUSE and oscillator etc)
-
-	HFUSE		Should be OK on both targets. If you have special requirements,
+	HFUSE		Sets AVR Hi-Fuse. Normally you will not have to change this
+				value for either 328p or 168p. If you have special requirements,
 				http://www.engbedded.com/fusecalc is a good AVR fuse calculator.
 
 	BOOTADDR	This is flash size minus boot section size, expressed in bytes.
 				For example, 32 kb - 1 kb = 31 kb = 31 * 1024 = 0x7c00
 				Set to 0x7c00 for Atmega328p and 0x3c00 for Atmega168p.
 
-2) Program the device:
+2) Edit the target configuration in config.h:
 
-	make fuseprog
-	make flash
+	FCPU		Target clock frequency
+
+Unless you plan to use the software serialport implementation (SWUART), you do
+not have to change any of the CONFIG_SWUART_* directives.
+
+3) Build and program the device:
+
+	make magboot_hw
+	make flash_hw
 
 The Makefile assumes your ISP programmer is of type stk500v2 and located at file
 /dev/avrusb0. If this is not true, append the PROGTYPE and PROGPORT parameters 
 with appropriate values. Example:
 
-	make PROGPORT=/dev/ttyUSB0 PROGTYPE=jtagmkII flash
+	make PROGPORT=/dev/ttyUSB0 PROGTYPE=jtagmkII flash_hw
 
 For a list of valid PROGTYPE values, please refer to the Avrdude manual:
 
@@ -99,3 +106,29 @@ was successfull!
 
 Optionally, the device may be reset using -r. This will cause the device to 
 reboot and bypass the bootloader.
+
+Software serial port support (ADVANCED)
+================================================================================
+Magboot normally operates over the built-in serialport of the AVR using the
+predefined TX and RX pins. This covers most needs and is the recommended mode of
+operation unless your serial port is connected to another pair of pins.
+
+In this case, you may use the software serialport mode of operation. It allows
+you to configure two arbitrary pins to use for TX and RX. This is useful if the 
+native serialport is unavailable, perhaps because of other peripheral serial
+devices.
+
+The serialport mode is a compile-time option. You may build the SoftWare UART 
+(SWUART) version of Magboot by issuing Make-target "magboot_sw":
+
+	make magboot_sw
+
+Prior to building the SWUART version, pin-configuration must be setup in 
+config.h. Please note that all the configuration steps listed in the 
+Installation section above also applies for the SWUART build (F_CPU etc.).
+
+Finally, flash Magboot SWUART onto target:
+
+	make [PROGPORT=/dev/ttyUSB0 PROGTYPE=myprogrammer] flash_sw
+
+For usage information, please refer to the Usage section above.

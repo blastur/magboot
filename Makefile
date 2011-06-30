@@ -24,34 +24,47 @@ PROGTYPE=stk500v2
 PROGPORT=/dev/avrusb0
 AVRDUDE=avrdude -p $(MCU) -c $(PROGTYPE) -P $(PROGPORT)
 
-PROG=magboot
-IHEX=magboot.ihex
-SRCS=magboot.c
-OBJS=$(SRCS:%.c=%.o)
+HWUART=magboot_hw
+SWUART=magboot_sw
+HWUART_IHEX=magboot_hw.ihex
+SWUART_IHEX=magboot_sw.ihex
+
+COMMON_OBJS=magboot.o
+HWUART_OBJS=hwuart.o
+SWUART_OBJS=swuart.o
 
 #OPTIMIZE = -Os -fno-inline-small-functions -fno-split-wide-types -mshort-calls
 OPTIMIZE = -Os
-CFLAGS += -g -Wall $(OPTIMIZE) -mmcu=$(MCU) -DF_CPU=$(CPU_FREQ)
+CFLAGS += -g -Wall $(OPTIMIZE) -mmcu=$(MCU) -include config.h -DBAUD_RATE=19200
 LDFLAGS += -Wl,--section-start=.text=$(BOOTADDR)
 
-CFLAGS += -DBAUD_RATE=115200
-CFLAGS += -DJUMP_ADDR=0x00
-
-# Target specifics: ATmega328p @ external 16 MHz
+# Target definition
 MCU=atmega328p
-CPU_FREQ=16000000L
 HFUSE=0xdc
 BOOTADDR=0x7c00
 
-$(PROG): $(OBJS)
+.PHONY: all
+all: $(HWUART_IHEX) $(SWUART_IHEX)
+
+$(HWUART): $(COMMON_OBJS) $(HWUART_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
-$(IHEX): $(PROG)
+$(SWUART): $(COMMON_OBJS) $(SWUART_OBJS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+
+$(HWUART_IHEX): $(HWUART)
+	$(OBJCOPY) -j .text -j .data -S -O ihex $^ $@
+
+$(SWUART_IHEX): $(SWUART)
 	$(OBJCOPY) -j .text -j .data -S -O ihex $^ $@ 
 
-.PHONY: flash
-flash: $(IHEX)
-	$(AVRDUDE) -e -U flash:w:$(IHEX)
+.PHONY: flash_sw
+flash_sw: $(SWUART_IHEX)
+	$(AVRDUDE) -e -U flash:w:$^
+
+.PHONY: flash_hw
+flash_hw: $(HWUART_IHEX)
+	$(AVRDUDE) -e -U flash:w:$^
 
 .PHONY: fusedump
 fusedump: 
@@ -67,4 +80,4 @@ flashdump:
 
 .PHONY: clean
 clean:
-	rm -f $(OBJS) $(PROG) $(IHEX)
+	rm -f $(COMMON_OBJS) $(HWUART) $(HWUART_IHEX) $(HWUART_OBJS) $(SWUART) $(SWUART_IHEX) $(SWUART_OBJS)

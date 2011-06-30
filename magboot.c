@@ -25,6 +25,8 @@
 #include <avr/interrupt.h>
 #include <avr/sfr_defs.h>
 
+#include "uart.h"
+
 #define LED_DIR     DDRB
 #define LED_PORT    PORTB
 #define LED_BIT		PB5
@@ -33,30 +35,6 @@
 #define CMD_FAIL() uart_putc('N')
 
 typedef void (*jump_t)(void);
-
-static void uart_putc(char ch)
-{
-	loop_until_bit_is_set(UCSR0A, UDRE0);
-	UDR0 = ch;
-}
-
-static uint8_t uart_getc(void)
-{
-	uint8_t ch;
-
-	loop_until_bit_is_set(UCSR0A, RXC0);
-	ch = UDR0;
-
-	return ch;
-}
-
-static void uart_init()
-{
-	UCSR0A = _BV(U2X0);
-	UCSR0B = _BV(RXEN0) | _BV(TXEN0);
-	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
-	UBRR0L = (uint8_t)((F_CPU + BAUD_RATE * 4L)/(BAUD_RATE * 8L) - 1);
-}
 
 static bool cmd_load_addr(uint16_t *addr)
 {
