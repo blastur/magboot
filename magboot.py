@@ -7,10 +7,8 @@
 usage: magboot <port> <device> <[command1] [command2] ... [commandN]>
 
 commands:
--a <addr>	Load (byte) address (autoincremented by -w)
--w <file>	Write contents of <file> to loaded address (use - for stdin)
+-w <file>	Write contents of <file> to beginning of flash (use - for stdin)
 -i		Verify device signature
--j		Jump to loaded address
 -r		Reset device (will bypass bootloader on next boot)
 -z		Wait for device to appear on <port>
 
@@ -82,7 +80,7 @@ def cmd_device_id():
 def cmd_load_addr(addr):
 	print "LOAD_ADDR"
 	# Little-endian, 16-bit uint load address
-	load_addr = pack('<H', int(addr, 16))
+	load_addr = pack('<H', addr)
 	do_cmd('A' + load_addr)
 
 def cmd_write_file(fname):
@@ -94,6 +92,8 @@ def cmd_write_file(fname):
 		f = open(fname, "rb")
 
 	eof = False
+
+	cmd_load_addr(0);
 	
 	while (not eof):
 		buf = array('c')
@@ -117,10 +117,6 @@ def cmd_write_file(fname):
 def cmd_reset():
 	print "RESET"
 	do_cmd('R', False)
-
-def cmd_jump():
-	print "JUMP"
-	do_cmd('J', False)
 
 def cmd_wait():
 	print "WAIT"
@@ -154,10 +150,8 @@ if __name__ == "__main__":
 	ser.flushOutput()
 
 	for o, a in opts:
-		if o == '-a': cmd_load_addr(a)
 		if o == '-w': cmd_write_file(a)
 		if o == '-i': cmd_device_id()
-		if o == '-j': cmd_jump()
 		if o == '-r': cmd_reset()
 		if o == '-z': cmd_wait()
 
