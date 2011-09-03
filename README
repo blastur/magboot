@@ -92,20 +92,14 @@ flashes a LED at 2 Hz (connected on Port B, PB5). Begin by building the testapp:
 		
 Proceed by uploading it using the python-script:
 
-	./magboot.py /dev/ttyUSB0 atmega328p -i -a 0x0 -w testapp/testapp.bin -a 0x0 -j
+	./magboot.py /dev/ttyUSB0 atmega328p -z -w testapp/testapp.bin -r
 
 Magboot will execute the following commands:
-- Verify device signature
-- Set address to 0x0. 
-- Write file 'testapp/testapp.bin' to address (which we've set to 0x0 above)
-- Set address to 0x0 again (write file will autoincrement)
-- Jump to address (which we've set to 0x0)
+- Wait for device to appear on /dev/ttyUSB0
+- Write file 'testapp/testapp.bin' to beginning of flash memory
+- Reset the device
 
-If the jump succeeded and your device starts flashing at 2 Hz, the flash write
-was successfull!
-
-Optionally, the device may be reset using -r. This will cause the device to 
-reboot and bypass the bootloader.
+If your device starts flashing at 2 Hz, the operation was successfull!
 
 Software serial port support (ADVANCED)
 ================================================================================
