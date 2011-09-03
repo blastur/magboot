@@ -88,7 +88,7 @@ static bool cmd_device_id(void)
 	return fail;
 }
 
-static bool cmd_jump(uint16_t addr)
+static void jump(uint16_t addr)
 {
 	jump_t func;
 
@@ -101,8 +101,6 @@ static bool cmd_jump(uint16_t addr)
 	wdt_disable();
 	func = (jump_t) addr;
 	func();
-
-	return false; /* Unreachable */
 }
 
 static bool cmd_reset(void)
@@ -114,12 +112,12 @@ static bool cmd_reset(void)
 }
 
 int main(void) {
-	uint16_t addr = JUMP_ADDR;
+	uint16_t addr = 0;
 	bool fail;
 
 	if (bit_is_clear(MCUSR, EXTRF)) {
 		/* Bypass magboot if reset caused by watchdog, power-on or brown-out */
-		cmd_jump(JUMP_ADDR);
+		jump(0);
 	} else
 		MCUSR &= ~(_BV(EXTRF));
 
@@ -149,11 +147,6 @@ int main(void) {
 			/* Reset */
 			case 'R':
 				fail = cmd_reset();
-				break;
-
-			/* Jump to address */
-			case 'J':
-				fail = cmd_jump(addr);
 				break;
 
 			default:
