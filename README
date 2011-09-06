@@ -10,9 +10,11 @@ Features
 * Flash firmware over the serial port (no need for a dedicated ISP programmer)
 * Supports Atmega168(p) and Atmega328(p)
 * Basic device identification to prevent flashing unknown or unsupported devices
-* Fits in a 1 kb boot section (binary size is approx. 650 bytes)
+* Fits in a 1 kb boot section (binary size is approx. 700 bytes)
 * Supports loading raw binaries only (ihex is NOT supported at the moment)
 * Supports native AVR serialport or software serialport on two arbitrary pins
+* Data transfers over the serial port are verified to prevent flashing corrupt 
+  data.
 
 Installation
 ================================================================================

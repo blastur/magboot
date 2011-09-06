@@ -44,16 +44,42 @@ static bool cmd_load_addr(uint16_t *addr)
 	return false;
 }
 
+static uint16_t checksum(uint8_t *data, size_t size)
+{
+	uint16_t *words = (uint16_t *) data;
+	size_t num_words = size / 2;
+	uint32_t sum;
+	uint8_t i;
+
+	for (i = 0; i < num_words; i++)
+		sum += words[i];
+
+	/* Fold */
+	while (sum >> 16)
+		sum = (sum & 0xFFFF) + (sum >> 16);
+
+	return (uint16_t) sum;
+}
+
 static bool cmd_write_page(uint16_t *addr)
 {
 	uint16_t i;
 	uint16_t page = *addr;
-	uint8_t buf[SPM_PAGESIZE];
+	uint8_t buf[SPM_PAGESIZE]; /* Pagesize + 16-bit checksum */
+	uint16_t expected_csum, actual_csum;
 
 	boot_page_erase(page);
-
+	
+	expected_csum = uart_getc();
+	expected_csum += uart_getc() << 8;
+	
 	for(i = 0; i < SPM_PAGESIZE; i++)
 		buf[i] = uart_getc();
+
+	actual_csum = checksum(buf, sizeof(buf));
+
+	if (expected_csum != actual_csum)
+		return true;
 
 	boot_spm_busy_wait();
 	for (i = 0; i < SPM_PAGESIZE; i += 2) {
