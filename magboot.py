@@ -83,6 +83,18 @@ def cmd_load_addr(addr):
 	load_addr = pack('<H', addr)
 	do_cmd('A' + load_addr)
 
+def checksum(data):
+	csum = 0
+	words = array('H', data)
+	for w in words:
+		csum = csum + w
+
+	# Fold overflow bits
+	while (csum >> 16):
+		csum = (csum & 0xFFFF) + (csum >> 16)
+
+	return pack('<H', csum)
+
 def cmd_write_file(fname):
 	print "WRITE_FILE"
 
@@ -111,8 +123,10 @@ def cmd_write_file(fname):
 			while (bytecount < dev['pagesize']):
 				buf.append(chr(0))
 				bytecount = bytecount + 1
-
-		do_cmd('W' + buf.tostring())
+		
+		bufstr = buf.tostring()
+		csum = checksum(bufstr)		
+		do_cmd('W' + csum + bufstr)
 
 def cmd_reset():
 	print "RESET"
