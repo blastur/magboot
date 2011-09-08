@@ -28,6 +28,8 @@ HWUART=magboot_hw
 SWUART=magboot_sw
 HWUART_IHEX=magboot_hw.ihex
 SWUART_IHEX=magboot_sw.ihex
+HWUART_BIN=magboot_hw.bin
+SWUART_BIN=magboot_sw.bin
 
 COMMON_OBJS=magboot.o
 HWUART_OBJS=hwuart.o
@@ -44,7 +46,7 @@ HFUSE=0xdc
 BOOTADDR=0x7c00
 
 .PHONY: all
-all: $(HWUART_IHEX) $(SWUART_IHEX)
+all: $(HWUART_IHEX) $(SWUART_IHEX) $(SWUART_BIN) $(HWUART_BIN)
 
 $(HWUART): $(COMMON_OBJS) $(HWUART_OBJS)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
@@ -57,6 +59,12 @@ $(HWUART_IHEX): $(HWUART)
 
 $(SWUART_IHEX): $(SWUART)
 	$(OBJCOPY) -j .text -j .data -S -O ihex $^ $@ 
+
+$(HWUART_BIN): $(HWUART)
+	$(OBJCOPY) -j .text -j .data -S -O binary $^ $@
+
+$(SWUART_BIN): $(SWUART)
+	$(OBJCOPY) -j .text -j .data -S -O binary $^ $@
 
 .PHONY: flash_sw
 flash_sw: $(SWUART_IHEX)
@@ -80,4 +88,4 @@ flashdump:
 
 .PHONY: clean
 clean:
-	rm -f $(COMMON_OBJS) $(HWUART) $(HWUART_IHEX) $(HWUART_OBJS) $(SWUART) $(SWUART_IHEX) $(SWUART_OBJS)
+	rm -f $(COMMON_OBJS) $(HWUART) $(HWUART_IHEX) $(HWUART_OBJS) $(HWUART_BIN) $(SWUART) $(SWUART_IHEX) $(SWUART_OBJS) $(SWUART_BIN)
