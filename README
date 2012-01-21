@@ -16,7 +16,7 @@ Features
 * Data transfers over the serial port are verified to prevent flashing corrupt 
   data.
 
-Installation
+Building and flashing Magboot firmware onto device
 ================================================================================
 To install magboot you need an ISP programmer. 
 
@@ -73,6 +73,10 @@ Power-cycling, resetting using watchdog or if a brown-out occurs, the bootloader
 will be bypassed upon next reboot. The philosophy behind this is that during 
 normal reset conditions, the bootloader should not interfere. It will ONLY enter 
 its programming mode if someone hits the RESET button.
+
+The python script depends on the python serial module, which is prepackage on
+most Linux distros. On Debian/Ubuntu, use apt-get install python-serial to
+install it.
 
 Example #1 - Check if magboot is alive and responding
 --------------------------------------------------------------------------------
