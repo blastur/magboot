@@ -19,37 +19,44 @@ To install magboot you need an ISP programmer.
 
 1) Edit Makefile and the "Target definition"-section:
 
-	MCU			Set to either 'atmega328p' or 'atmega168p' depending on target.
+```
+MCU         Set to either 'atmega328p' or 'atmega168p' depending on target.
 
-	HFUSE		Sets AVR Hi-Fuse. Normally you will not have to change this
-				value for either 328p or 168p. If you have special requirements,
-				http://www.engbedded.com/fusecalc is a good AVR fuse calculator.
+HFUSE       Sets AVR Hi-Fuse. Normally you will not have to change this
+            value for either 328p or 168p. If you have special requirements,
+            http://www.engbedded.com/fusecalc is a good AVR fuse calculator.
 
-	BOOTADDR	This is flash size minus boot section size, expressed in bytes.
-				For example, 32 kb - 1 kb = 31 kb = 31 * 1024 = 0x7c00
-				Set to 0x7c00 for Atmega328p and 0x3c00 for Atmega168p.
+BOOTADDR    This is flash size minus boot section size, expressed in bytes.
+            For example, 32 kb - 1 kb = 31 kb = 31 * 1024 = 0x7c00
+            Set to 0x7c00 for Atmega328p and 0x3c00 for Atmega168p.
+```
 
 2) Edit the target configuration in config.h:
 
-	FCPU		Target clock frequency
+```
+FCPU        Target clock frequency
+```
 
 Unless you plan to use the software serialport implementation (SWUART), you do
 not have to change any of the CONFIG_SWUART_* directives.
 
 3) Build and program the device:
 
-	make magboot_hw
-	make flash_hw
+```
+make magboot_hw
+make flash_hw
+```
 
 The Makefile assumes your ISP programmer is of type stk500v2 and located at file
 /dev/avrusb0. If this is not true, append the PROGTYPE and PROGPORT parameters
 with appropriate values. Example:
 
-	make PROGPORT=/dev/ttyUSB0 PROGTYPE=jtagmkII flash_hw
+```
+make PROGPORT=/dev/ttyUSB0 PROGTYPE=jtagmkII flash_hw
+```
 
-For a list of valid PROGTYPE values, please refer to the Avrdude manual:
-
-	http://www.nongnu.org/avrdude/user-manual/avrdude_4.html
+For a list of valid PROGTYPE values, please refer to the
+[Avrdude manual](http://www.nongnu.org/avrdude/user-manual/avrdude_4.html).
 
 Scroll down to the -c option for a complete list of supported programmers.
 
@@ -78,7 +85,9 @@ install it.
 The device identification command will ask the device to compare a known
 signature to its own signature.
 
-	./magboot.py /dev/ttyUSB0 atmega328p -i
+```
+./magboot.py /dev/ttyUSB0 atmega328p -i
+```
 
 It can also be used to check for device presence. If no reply is received in
 a few seconds, the python script will print a timeout error. If this happens,
@@ -88,11 +97,15 @@ try resetting your device to make sure the 4 second timer has not expired.
 Included with magboot is a testprogram. It is a very simple program which
 flashes a LED at 2 Hz (connected on Port B, PB5). Begin by building the testapp:
 
-	make -C testapp
+```
+make -C testapp
+```
 
 Proceed by uploading it using the python-script:
 
-	./magboot.py /dev/ttyUSB0 atmega328p -z -w testapp/testapp.bin -r
+```
+./magboot.py /dev/ttyUSB0 atmega328p -z -w testapp/testapp.bin -r
+```
 
 Magboot will execute the following commands:
 - Wait for device to appear on /dev/ttyUSB0
@@ -114,7 +127,9 @@ devices.
 The serialport mode is a compile-time option. You may build the SoftWare UART
 (SWUART) version of Magboot by issuing Make-target "magboot_sw":
 
-	make magboot_sw
+```
+make magboot_sw
+```
 
 Prior to building the SWUART version, pin-configuration must be setup in
 config.h. Please note that all the configuration steps listed in the
@@ -122,6 +137,8 @@ Installation section above also applies for the SWUART build (F_CPU etc.).
 
 Finally, flash Magboot SWUART onto target:
 
-	make [PROGPORT=/dev/ttyUSB0 PROGTYPE=myprogrammer] flash_sw
+```
+make [PROGPORT=/dev/ttyUSB0 PROGTYPE=myprogrammer] flash_sw
+```
 
 For usage information, please refer to the Usage section above.
