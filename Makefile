@@ -58,7 +58,7 @@ $(HWUART_IHEX): $(HWUART)
 	$(OBJCOPY) -j .text -j .data -S -O ihex $^ $@
 
 $(SWUART_IHEX): $(SWUART)
-	$(OBJCOPY) -j .text -j .data -S -O ihex $^ $@ 
+	$(OBJCOPY) -j .text -j .data -S -O ihex $^ $@
 
 $(HWUART_BIN): $(HWUART)
 	$(OBJCOPY) -j .text -j .data -S -O binary $^ $@
@@ -75,7 +75,7 @@ flash_hw: $(HWUART_IHEX)
 	$(AVRDUDE) -e -U flash:w:$^
 
 .PHONY: fusedump
-fusedump: 
+fusedump:
 	$(AVRDUDE) -U hfuse:r:-:h
 
 .PHONY: fuseprog

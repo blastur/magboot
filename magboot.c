@@ -1,5 +1,5 @@
 /* Copyright (C) 2010-2011 Magnus Olsson
- * 
+ *
  * This file is part of magboot
  * Windnode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,10 +69,10 @@ static bool cmd_write_page(uint16_t *addr)
 	uint16_t expected_csum, actual_csum;
 
 	boot_page_erase(page);
-	
+
 	expected_csum = uart_getc();
 	expected_csum += uart_getc() << 8;
-	
+
 	for(i = 0; i < SPM_PAGESIZE; i++)
 		buf[i] = uart_getc();
 

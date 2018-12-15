@@ -1,5 +1,5 @@
 /* Copyright (C) 2010-2011 Magnus Olsson
- * 
+ *
  * This file is part of magboot
  * Windnode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -124,4 +124,3 @@ void uart_init()
 	CONFIG_SWUART_TX_DIR  |= _BV(CONFIG_SWUART_TX_BIT);
 	tx_pin(STOPBIT);
 }
-

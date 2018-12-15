@@ -43,10 +43,10 @@ $(PROG): $(OBJS)
 	$(CC) $(LDFLAGS) -o $@ $^
 
 $(BIN): $(PROG)
-	$(OBJCOPY) -R .fuse -R .eeprom -R .lock -R .signature -S -O binary $^ $@ 
+	$(OBJCOPY) -R .fuse -R .eeprom -R .lock -R .signature -S -O binary $^ $@
 
 $(IHEX): $(PROG)
-	$(OBJCOPY) -R .fuse -R .eeprom -R .lock -R .signature -S -O ihex $^ $@ 
+	$(OBJCOPY) -R .fuse -R .eeprom -R .lock -R .signature -S -O ihex $^ $@
 
 .PHONY: flash
 flash: $(IHEX)

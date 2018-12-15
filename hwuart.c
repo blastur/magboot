@@ -1,5 +1,5 @@
 /* Copyright (C) 2010-2011 Magnus Olsson
- * 
+ *
  * This file is part of magboot
  * Windnode is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,4 +40,3 @@ void uart_init()
 	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
 	UBRR0L = (uint8_t)((F_CPU + BAUD_RATE * 4L)/(BAUD_RATE * 8L) - 1);
 }
-
