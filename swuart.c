@@ -85,7 +85,7 @@ void uart_putc(uint8_t ch)
 static int __getc(void)
 {
 	uint8_t bit;
-	uint8_t ch;
+	uint8_t ch = 0;
 
 	half_bit_delay();
 	if (rx_pin() != STARTBIT)

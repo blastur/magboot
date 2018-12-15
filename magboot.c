@@ -48,7 +48,7 @@ static uint16_t checksum(uint8_t *data, size_t size)
 {
 	uint16_t *words = (uint16_t *) data;
 	size_t num_words = size / 2;
-	uint32_t sum;
+	uint32_t sum = 0;
 	uint8_t i;
 
 	for (i = 0; i < num_words; i++)
